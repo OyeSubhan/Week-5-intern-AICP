@@ -1,0 +1,56 @@
+#include <iostream>
+using namespace std;
+#include <string>
+
+// Get 1st Functions  Declare
+
+// Using Bool Statements
+
+bool isValidFrequentParkingNumber(const std::string& number) {
+    if (number.length() != 5) return false;
+    
+    int sum = 0;
+    for (int i = 0; i < 4; ++i) {
+        if (!isdigit(number[i])) return false; // Check if the first 4 are digits
+        sum += number[i] - '0';
+    }
+    
+    int checkDigit = sum % 10;
+    return (checkDigit == (number[4] - '0')); // Check if the last digit matche the  digit
+}
+
+double calculateParkingFee(int day, int hour, int duration, bool hasDiscount) {
+    double rate = (day >= 1 && day <= 5) ? 2.0 : 3.0; // 1=Monday, 7=Sunday
+    double fee = rate * duration;
+    if (hasDiscount) {
+        fee *= 0.8; // Apply 20% discount
+    }
+    return fee;
+}
+
+int main() {
+    int day, hour, duration;
+    std::string frequentParkingNumber;
+    
+    std::cout << "Enter the day of the week (1=Monday, 7=Sunday): ";
+    std::cin >> day;
+    
+    std::cout << "Enter the hour of arrival (0-23): ";
+    std::cin >> hour;
+    
+    std::cout << "Enter the number of hours to park: ";
+    std::cin >> duration;
+    
+    std::cout << "Enter your frequent parking number (or 'none' if not available): ";
+    std::cin >> frequentParkingNumber;
+    
+    bool hasDiscount = false;
+    if (frequentParkingNumber != "none" && isValidFrequentParkingNumber(frequentParkingNumber)) {
+        hasDiscount = true;
+    }
+    
+    double fee = calculateParkingFee(day, hour, duration, hasDiscount);
+    std::cout << "The price to park is: $" << fee << std::endl;
+    
+    return 0;
+}
