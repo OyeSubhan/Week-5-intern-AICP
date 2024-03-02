@@ -1,0 +1,71 @@
+#include <iostream>
+using namespace std;
+#include <string>
+
+// 1st Funtion Declerations
+//USing BOOL Statements
+bool isValidFrequentParkingNumber(const std::string& number) {
+    if (number.length() != 5) return false;
+    
+    int sum = 0;
+    for (int i = 0; i < 4; ++i) {
+        if (!isdigit(number[i])) return false;
+        sum += number[i] - '0';
+    }
+    
+    int checkDigit = sum % 10;
+    return (checkDigit == (number[4] - '0'));
+}
+
+double calculateParkingFee(int day, int arrivalHour, int duration, bool hasDiscount) {
+    double daytimeRate = (day >= 1 && day <= 5) ? 2.0 : 3.0;
+    double eveningRate = 1.0;
+    double fee = 0.0;
+    
+    // Calculate day time duration
+    int daytimeDuration = 0;
+    if (arrivalHour < 16) {
+        daytimeDuration = std::min(duration, 16 - arrivalHour);
+    }
+    
+    // Calculate evening duration
+    int eveningDuration = duration - daytimeDuration;
+    
+    // Apply rates
+    fee += daytimeDuration * daytimeRate;
+    fee += eveningDuration * eveningRate;
+    
+    // Apply discount if Apply
+    if (hasDiscount) {
+        fee *= 0.8; // Apply 20% discount
+    }
+    
+    return fee;
+}
+
+int main() {
+    int day, hour, duration;
+    std::string frequentParkingNumber;
+    
+    std::cout << "Enter the day of the week (1=Monday, 7=Sunday): ";
+    std::cin >> day;
+    
+    std::cout << "Enter the hour of arrival (0-23, excluding minutes): ";
+    std::cin >> hour;
+    
+    std::cout << "Enter the number of hours to park: ";
+    std::cin >> duration;
+    
+    std::cout << "Enter your frequent parking number (or 'none' if not available): ";
+    std::cin >> frequentParkingNumber;
+    
+    bool hasDiscount = false;
+    if (frequentParkingNumber != "none" && isValidFrequentParkingNumber(frequentParkingNumber)) {
+        hasDiscount = true;
+    }
+    
+    double fee = calculateParkingFee(day, hour, duration, hasDiscount);
+    std::cout << "The price to park is: $" << fee << std::endl;
+    
+    return 0;
+}
