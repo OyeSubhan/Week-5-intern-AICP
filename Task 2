@@ -1,0 +1,70 @@
+#include <iostream>
+using namespace std;
+#include <string>
+
+//Get 1st function declare 
+
+// using bool statements
+
+bool isValidFrequentParkingNumber(const std::string& number) {
+    if (number.length() != 5) return false;
+    
+    int sum = 0;
+    for (int i = 0; i < 4; ++i) {
+        if (!isdigit(number[i])) return false;
+        sum += number[i] - '0';
+    }
+    
+    int checkDigit = sum % 10;
+    return (checkDigit == (number[4] - '0'));
+}
+
+double calculateParkingFee(int day, int hour, int duration, bool hasDiscount) {
+    double rate = (day >= 1 && day <= 5) ? 2.0 : 3.0;
+    double fee = rate * duration;
+    if (hasDiscount) {
+        fee *= 0.8; // Apply 20% discount
+    }
+    return fee;
+}
+
+int main() {
+    double dailyTotal = 0.0;
+    while (true) {
+        int day, hour, duration;
+        std::string frequentParkingNumber;
+        
+        std::cout << "\nEnter the day of the week (1=Monday, 7=Sunday, -1 to end): ";
+        std::cin >> day;
+        if (day == -1) break; // finish of day
+        
+        std::cout << "Enter the hour of arrival (0-23): ";
+        std::cin >> hour;
+        
+        std::cout << "Enter the number of hours to park: ";
+        std::cin >> duration;
+        
+        std::cout << "Enter your frequent parking number (or 'none' if not available): ";
+        std::cin >> frequentParkingNumber;
+        
+        bool hasDiscount = false;
+        if (frequentParkingNumber != "none" && isValidFrequentParkingNumber(frequentParkingNumber)) {
+            hasDiscount = true;
+        }
+        
+        double fee = calculateParkingFee(day, hour, duration, hasDiscount);
+        std::cout << "The price to park is: $" << fee << std::endl;
+        
+        double amountPaid;
+        do {
+            std::cout << "Enter the amount paid (must be greater than or equal to the displayed amount): ";
+            std::cin >> amountPaid;
+        } while (amountPaid < fee);
+        
+        dailyTotal += amountPaid;
+    }
+    
+    std::cout << "\nTotal payments made for parking today: $" << dailyTotal << std::endl;
+    
+    return 0;
+}
